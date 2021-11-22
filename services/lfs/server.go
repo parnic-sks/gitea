@@ -237,6 +237,13 @@ func BatchHandler(ctx *context.Context) {
 			responseObject = buildObjectResponse(rc, p, false, !exists, err)
 		} else {
 			var err *lfs_module.ObjectError
+			if !exists {
+				_, err := models.NewLFSMetaObject(&models.LFSMetaObject{Pointer: p, RepositoryID: repository.ID})
+				if err == nil {
+					exists = true
+				}
+			}
+
 			if !exists || meta == nil {
 				err = &lfs_module.ObjectError{
 					Code:    http.StatusNotFound,
