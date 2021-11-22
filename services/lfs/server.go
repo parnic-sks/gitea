@@ -237,10 +237,23 @@ func BatchHandler(ctx *context.Context) {
 			responseObject = buildObjectResponse(rc, p, false, !exists, err)
 		} else {
 			var err *lfs_module.ObjectError
-			if !exists {
-				_, err := models.NewLFSMetaObject(&models.LFSMetaObject{Pointer: p, RepositoryID: repository.ID})
-				if err == nil {
-					exists = true
+
+			if exists && meta == nil {
+				accessible, accessibleErr := models.LFSObjectAccessible(ctx.User, p.Oid)
+				if accessibleErr != nil {
+					log.Error("Unable to check if LFS MetaObject [%s] is accessible. Error: %v", p.Oid, err)
+					writeStatus(ctx, http.StatusInternalServerError)
+					return
+				}
+				if accessible {
+					_, newMetaObjErr := models.NewLFSMetaObject(&models.LFSMetaObject{Pointer: p, RepositoryID: repository.ID})
+					if newMetaObjErr != nil {
+						log.Error("Unable to create LFS MetaObject [%s] for %s/%s. Error: %v", p.Oid, rc.User, rc.Repo, err)
+						writeStatus(ctx, http.StatusInternalServerError)
+						return
+					}
+				} else {
+					exists = false
 				}
 			}
 
