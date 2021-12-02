@@ -129,7 +129,7 @@ func (repo *Repository) CountLFSMetaObjects() (int64, error) {
 
 // LFSObjectAccessible checks if a provided Oid is accessible to the user
 func LFSObjectAccessible(user *User, oid string) (bool, error) {
-	if user.IsAdmin {
+	if user != nil && user.IsAdmin {
 		count, err := x.Count(&LFSMetaObject{Pointer: lfs.Pointer{Oid: oid}})
 		return count > 0, err
 	}
