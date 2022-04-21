@@ -718,13 +718,13 @@ func GetSquashMergeCommitMessages(pr *models.PullRequest) string {
 	return stringBuilder.String()
 }
 
-// GetIssuesLastCommitStatus returns a map
+// GetIssuesLastCommitStatus returns a map of issue ID to the most recent commit's latest status
 func GetIssuesLastCommitStatus(issues models.IssueList) (map[int64]*models.CommitStatus, error) {
 	_, lastStatus, err := GetIssuesAllCommitStatus(issues)
 	return lastStatus, err
 }
 
-// GetIssuesAllCommitStatus returns a map
+// GetIssuesAllCommitStatus returns a map of issue ID to a list of all statuses for the most recent commit as well as a map of issue ID to only the commit's latest status
 func GetIssuesAllCommitStatus(issues models.IssueList) (map[int64][]*models.CommitStatus, map[int64]*models.CommitStatus, error) {
 	if err := issues.LoadPullRequests(); err != nil {
 		return nil, nil, err
