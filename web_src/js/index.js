@@ -36,7 +36,11 @@ import {
   initRepoPullRequestMergeInstruction,
   initRepoPullRequestReview,
 } from './features/repo-issue.js';
-import {initRepoEllipsisButton, initRepoCommitLastCommitLoader} from './features/repo-commit.js';
+import {
+  initRepoEllipsisButton,
+  initRepoCommitLastCommitLoader,
+  initCommitStatuses,
+} from './features/repo-commit.js';
 import {
   initFootLanguageMenu,
   initGlobalButtonClickOnEnter,
@@ -160,6 +164,8 @@ $(document).ready(() => {
   initRepoTopicBar();
   initRepoWikiForm();
   initRepository();
+
+  initCommitStatuses();
 
   initUserAuthLinkAccountView();
   initUserAuthOauth2();
