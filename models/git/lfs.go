@@ -226,7 +226,7 @@ func CountLFSMetaObjects(repoID int64) (int64, error) {
 
 // LFSObjectAccessible checks if a provided Oid is accessible to the user
 func LFSObjectAccessible(user *user_model.User, oid string) (bool, error) {
-	if user.IsAdmin {
+	if user != nil && user.IsAdmin {
 		count, err := db.GetEngine(db.DefaultContext).Count(&LFSMetaObject{Pointer: lfs.Pointer{Oid: oid}})
 		return count > 0, err
 	}
